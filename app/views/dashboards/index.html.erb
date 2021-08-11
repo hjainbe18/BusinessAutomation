@@ -1,0 +1,15 @@
+<% if @role == 'default' %>
+  You have no role assigned. Please contact your administrator.
+<% end %>
+
+<% if @role == 'admin' %>
+  <%= render partial: 'admin' %>
+<% end %>
+
+<% if @role == 'supervisor' %>
+  <%= render partial: 'supervisor' %>
+<% end %>
+
+<% if @role == 'customer' %>
+  <%= render partial: 'customer' %>
+<% end %>

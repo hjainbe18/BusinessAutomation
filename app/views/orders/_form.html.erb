@@ -1,0 +1,51 @@
+<%= form_with(model: order) do |form| %>
+  <% if order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(order.errors.count, "error") %> prohibited this order from being saved:</h2>
+
+      <ul>
+        <% order.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if @role == 'admin' %>
+    <div class="field" data-event="<%= @event%>" id="customer--select">
+      <%= form.label :customer %>
+      <%= form.collection_select :customer_id, customers, :id, :name, include_blank: false%>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :raw_material %>
+    <%= form.select :raw_material, Order.raw_materials.keys, {} %>
+  </div>
+
+  <div class="field">
+    <%= form.label :process_type %>
+    <%= form.select :process_type, Order.process_types.keys, {} %>
+  </div>
+
+  <div class="field">
+    <%= form.label :material_quantity %>
+    <%= form.number_field :material_quantity %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<script>
+  function disableCustomerField() {
+    let dropdown = document.querySelector('#order_customer_id');
+    let elem = document.querySelector('#customer--select');
+    let formEvent = elem.dataset.event;
+    if(formEvent === 'edit') {
+        dropdown.disabled = true;
+    }
+  }
+  window.onload = disableCustomerField;
+</script>

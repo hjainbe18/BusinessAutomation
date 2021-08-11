@@ -1,0 +1,102 @@
+<%= form_with model: @user, url: sign_up_path do |f|  %>
+
+  <div class="field">
+    <%= f.label :email %>
+    <%= f.text_field :email %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation %>
+  </div>
+
+  <div class="field">
+    <%= f.label 'User Type'%>
+    <%= f.select :role, User.roles.deep_dup.except(:admin).keys, {} %>
+  </div>
+
+  <div class="hidden" id="hidden--form--customer">
+    <%= f.fields_for :customer_attributes, class: 'hidden--form' do |customer_fields| %>
+      <div class="field">
+        <%= customer_fields.label :name %>
+        <%= customer_fields.text_field :name, class: 'form--field' %>
+      </div>
+
+      <div class="field">
+        <%= customer_fields.label :address %>
+        <%= customer_fields.text_area :address, class: 'form--field'%>
+      </div>
+
+      <div class="field">
+        <%= customer_fields.label :contact_number %>
+        <%= customer_fields.number_field :contact_number, class: 'form--field'%>
+      </div>
+    <% end %>
+
+  </div>
+
+  <div class="hidden" id="hidden--form--supervisor">
+    <%= f.fields_for :supervisor_attributes, class: 'hidden--form' do |supervisor_fields| %>
+      <div class="field">
+        <%= supervisor_fields.label :name %>
+        <%= supervisor_fields.text_field :name, class: 'form--field' %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Sign Up" %>
+  </div>
+<% end %>
+<script>
+  function showCustomerForm(){
+    let customerForm = document.querySelector('#hidden--form--customer');
+    customerForm.style.display = 'inline';
+  }
+
+  function showSupervisorForm(){
+      let supervisorForm = document.querySelector('#hidden--form--supervisor');
+      supervisorForm.style.display = 'inline';
+  }
+
+  function hideForm(){
+    let forms = document.querySelectorAll('.hidden');
+    for(let i = 0; i < forms.length; i++){
+      forms[i].style.display = 'none';
+    }
+  }
+
+  function clearFormFields(){
+    let fields = document.querySelectorAll('.form--fields');
+    for(let i = 0; i < fields.length; i++){
+      fields[i].value = null;
+    }
+  }
+
+  function addEvent(){
+    let dropdown = document.querySelector('#user_role');
+
+    dropdown.addEventListener('change', function(e){
+      if(e.currentTarget.value === 'customer'){
+        hideForm();
+        showCustomerForm();
+      }
+      else if (e.currentTarget.value === 'supervisor'){
+        hideForm();
+        showSupervisorForm();
+      }
+      else
+      {
+        hideForm();
+        clearFormFields();
+      }
+    })
+  }
+
+  window.onload = addEvent;
+</script>
